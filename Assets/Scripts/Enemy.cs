@@ -5,29 +5,42 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private int path;
     [SerializeField] private GameObject deathVFX;
     [SerializeField] private GameObject hitVFX;
     [SerializeField] private Image healthBarImage;
     [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private PopAnimator popAnimator;
     [SerializeField] private Material normalColor;
     [SerializeField] private Material hitColor;
+    [SerializeField] private int multiplier;
     [SerializeField] private float health;
     [SerializeField] private float currentHealh;
     [SerializeField] private float speed;
 
-    private WaypointManager waypointManager;
+    [SerializeField] private WaypointManager waypointManager;
     private List<Transform> patrolPointList;
     private int currentPoint = 0;
 
     private void Awake()
     {
         currentHealh = health;
-        waypointManager = FindFirstObjectByType<WaypointManager>();
     }
 
     private void Start()
     {
-        patrolPointList = waypointManager.WayPointList;
+        if (path == 1)
+        {
+            patrolPointList = waypointManager.WayPointList1;
+        }
+        else if (path == 2)
+        {
+            patrolPointList = waypointManager.WayPointList2;
+        }
+        else if (path == 3)
+        {
+            patrolPointList = waypointManager.WayPointList3;
+        }
     }
 
     private void Update()
@@ -49,9 +62,13 @@ public class Enemy : MonoBehaviour
     {
         currentHealh -= decrease;
         healthBarImage.fillAmount = currentHealh / health;
-
+        popAnimator.TriggerPopAnimation();
         if (currentHealh <= 0)
         {
+            float addition = Vector3.Distance(Camera.main.transform.position, transform.position);
+            addition *= multiplier;
+            Debug.Log(addition);
+            ScoreManager.Instance.IncreaseScore((int)addition);
             Instantiate(deathVFX, transform.position, Quaternion.identity);
             Destroy(gameObject);
             return;

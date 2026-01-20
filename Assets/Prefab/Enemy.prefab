@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5073489635454319156}
   - component: {fileID: 2829457481601183719}
   - component: {fileID: 2466990750393658797}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 7544953510747244928}
   - component: {fileID: 4617992638123595650}
   - component: {fileID: 1348245436426769611}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,8 @@ GameObject:
   - component: {fileID: 6059756611944106457}
   - component: {fileID: 7491270986791971419}
   - component: {fileID: 3693117149151268810}
-  m_Layer: 0
+  - component: {fileID: 3219907286743766354}
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -334,8 +335,23 @@ MonoBehaviour:
   hitVFX: {fileID: 7605875904971187881, guid: 86015643d77085941813f3f6ff2f9a5a, type: 3}
   healthBarImage: {fileID: 1348245436426769611}
   meshRenderer: {fileID: 8208333724730132255}
+  popAnimator: {fileID: 3219907286743766354}
   normalColor: {fileID: 2100000, guid: e6b7be004a9ceba47aa70362e46d58b8, type: 2}
   hitColor: {fileID: 2100000, guid: c297cdd61499ae7478c7d48003612049, type: 2}
   health: 50
   currentHealh: 0
   speed: 1
+--- !u!114 &3219907286743766354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7415483297989871167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64d0ae73f8a751047969b3d1df954a63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PopAnimator
+  popScale: {x: 1.5, y: 1.5, z: 1.5}
+  animationDuration: 0.5
