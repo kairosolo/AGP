@@ -1203,9 +1203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64417dba89499e84d85af5f08d65757d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointManager
-  wayPointList:
-  - {fileID: 1575995311}
-  - {fileID: 1748827847}
+  wayPointList1: []
+  wayPointList2: []
+  wayPointList3: []
 --- !u!4 &1386408759
 Transform:
   m_ObjectHideFlags: 0
