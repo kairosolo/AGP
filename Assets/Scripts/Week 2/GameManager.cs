@@ -6,9 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     [SerializeField] private GameObject gameOverScreen;
-    [SerializeField] private float gameDuretion;
-    private float currentGameDuretion;
-    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI enemyLeft;
     private bool isGameOver = false;
     public bool IsGameOver => isGameOver;
 
@@ -26,20 +24,26 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        currentGameDuretion = gameDuretion;
-        timerText.text = "Time: " + Math.Round(currentGameDuretion, 2);
+        enemyLeft.text = "Enemy Left: ";
     }
 
-    private void Update()
+    public void SetNumberEnemies(int currentEnemies)
     {
-        currentGameDuretion -= Time.deltaTime;
-        timerText.text = "Time: " + Math.Round(currentGameDuretion, 2);
-
-        if (currentGameDuretion <= 0)
+        enemyLeft.text = "Enemy Left: ";
+        if (currentEnemies <= 0)
         {
-            isGameOver = true;
-            timerText.text = "0";
-            gameOverScreen.SetActive(true);
+            GameOver();
         }
+        else
+        {
+            enemyLeft.text += currentEnemies;
+        }
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        enemyLeft.text = "0";
+        gameOverScreen.SetActive(true);
     }
 }

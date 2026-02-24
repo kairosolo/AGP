@@ -2,79 +2,63 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Grenade grenade;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private float knockbackForce;
-    [SerializeField] private float damage;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private float maxpeed;
-    [SerializeField] private float acceleration;
-    [SerializeField] private float deceleration;
-    [SerializeField] private float radius = 5;
-    private float currentSpeedForward;
-    private float currentSpeedSide;
-    private bool isGrounded = false;
+    [SerializeField] private float walkSpeed = 7f;
+    [SerializeField] private float acceleration = 50f;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private float sensitivity = 2f;
+
+    private float xRotation;
+    private bool isGrounded;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        rb.freezeRotation = true;
+    }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Grenade grenadeClone = Instantiate(grenade, cameraTransform.position + cameraTransform.forward, Quaternion.identity);
+            grenadeClone.GetComponent<Rigidbody>().AddForce(5f * cameraTransform.forward, ForceMode.Impulse);
+        }
+
+        float mouseX = Input.GetAxis("Mouse X") * sensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+
+        transform.Rotate(Vector3.up * mouseX);
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
             isGrounded = false;
         }
-        float moveVertical = Input.GetAxis("Vertical");
-        float moveHorizontal = Input.GetAxis("Horizontal");
-
-        if (Mathf.Abs(moveVertical) > 0.1f)
-            currentSpeedForward = Mathf.MoveTowards(currentSpeedForward, maxpeed * moveVertical, acceleration * Time.deltaTime);
-        else
-            currentSpeedForward = Mathf.MoveTowards(currentSpeedForward, 0, deceleration * Time.deltaTime);
-
-        if (Mathf.Abs(moveHorizontal) > 0.1f)
-            currentSpeedSide = Mathf.MoveTowards(currentSpeedSide, maxpeed * moveHorizontal, acceleration * Time.deltaTime);
-        else
-            currentSpeedSide = Mathf.MoveTowards(currentSpeedSide, 0, deceleration * Time.deltaTime);
-
-        transform.Translate(Vector3.forward * currentSpeedForward * Time.deltaTime);
-        transform.Translate(Vector3.right * currentSpeedSide * Time.deltaTime);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void FixedUpdate()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-            isGrounded = true;
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            ExplosionDamage(transform.position);
-        }
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveZ = Input.GetAxisRaw("Vertical");
+
+        Vector3 moveDir = (transform.forward * moveZ + transform.right * moveX).normalized;
+
+        Vector3 targetVelocity = moveDir * walkSpeed;
+        Vector3 velocityChange = (targetVelocity - rb.linearVelocity);
+
+        velocityChange.y = 0;
+
+        rb.AddForce(velocityChange * acceleration, ForceMode.Acceleration);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionStay(Collision collision)
     {
-        if (other.gameObject.CompareTag("Ground"))
-            isGrounded = true;
-        if (other.gameObject.CompareTag("Obstacle"))
-        {
-            ExplosionDamage(transform.position);
-        }
-    }
-
-    private void ExplosionDamage(Vector3 center)
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("Obstacle"))
-            {
-                hitCollider.TryGetComponent<Rigidbody>(out Rigidbody rb);
-                rb.AddForce((transform.position - hitCollider.transform.position).normalized * -knockbackForce, ForceMode.Impulse);
-                hitCollider.TryGetComponent<Enemy>(out Enemy enemy);
-                enemy.DecreaseHealth(damage);
-            }
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, radius);
+        if (collision.contacts[0].normal.y > 0.5f) isGrounded = true;
     }
 }

@@ -11,16 +11,16 @@ public class Gun : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //if (GameManager.Instance.IsGameOver) return;
+            if (GameManager.Instance.IsGameOver) return;
 
             popAnimator.TriggerPopAnimation();
             Ray ray = gameCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, enemyMask))
             {
-                if (hit.transform.TryGetComponent<Animator>(out Animator animator))
+                if (hit.transform.TryGetComponent<Mouse>(out Mouse mouse))
                 {
-                    animator.enabled = false;
+                    mouse.TriggerMouseDeath();
                 }
             }
         }
