@@ -766,7 +766,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!114 &1369679393
 MonoBehaviour:
@@ -781,6 +781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpringTest
   force: 50
+  playerForce: 10
   rb: {fileID: 1369679392}
 --- !u!1 &1435622244
 GameObject:

@@ -4,6 +4,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private float fallThreshold = -1f;
 
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 6f;
@@ -15,11 +16,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsGameStart) return;
         inputDirection = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             Jump();
+        }
+
+        if (rb.linearVelocity.y < fallThreshold)
+        {
+            transform.position = GameManager.Instance.checkPointPosition;
         }
     }
 

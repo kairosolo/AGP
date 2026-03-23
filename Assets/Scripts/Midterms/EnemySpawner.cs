@@ -48,13 +48,13 @@ public class EnemySpawner : MonoBehaviour
                 currentEnemies++;
             }
         }
-        GameManager.Instance.SetNumberEnemies(currentEnemies);
+        // GameManager.Instance.SetNumberEnemies(currentEnemies);
     }
 
     public void DecreaseCurrentEnemies()
     {
         currentEnemies--;
-        GameManager.Instance.SetNumberEnemies(currentEnemies);
+        // GameManager.Instance.SetNumberEnemies(currentEnemies);
     }
 
     private void OnDrawGizmos()
